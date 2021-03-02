@@ -44,20 +44,104 @@ def menu():
   c_look(peticiones, inicial, bit)
  
 def fcfs(peticiones, inicial):
- #peticiones -> lista de numeros enteros
- #inicial -> numero entero 
- #Mostrar tabla
- #Imprimir desplazamiento
- #Imprimir tiempo de espera promedio
- pass
+  #peticiones -> lista de numeros enteros
+  #inicial -> numero entero
+  #Mostrar tabla
+  contador = 0 #Contador para saber en que posicion estamos del arreglo
+  tiempoEspera = 0 #Tiempo de espera de cada disco
+  tiempoEsperaTotal = 0 #Tiempo de espera total
+  desplazamiento = 0 #Desplazamiento de cada uno de los discos
+  desplazamientoTotal = 0 #Desplazamiento total
+
+  print()
+  print('|---------------------------------------------------------------------------|')
+  print('|                               Algoritmo FCFS                              |')
+  print('|---------------------------------------------------------------------------|')
+  print('| Cilindro Actual | Cilindro solicitado | Tiempo de espera | Desplazamiento |')
+  print('|---------------------------------------------------------------------------|')
+
+  while contador != len(peticiones): #Ciclo para realizar todos los procesos necesarios
+    tiempoEspera+=desplazamiento #Calculamos el tiempo de espera
+    desplazamiento=abs(inicial-peticiones[contador]) #Calculamos el desplazamiento realizado
+    print('|{:^17}|{:^21}|{:^18}|{:^16}|'.format(inicial, peticiones[contador], tiempoEspera, desplazamiento)) #Mostramos los resultados
+    print('|---------------------------------------------------------------------------|')
+    inicial=peticiones[contador] #Asignamos el nuevo valor actual
+    desplazamientoTotal+=desplazamiento #Calculamos el desplazamiento total
+    tiempoEsperaTotal+=tiempoEspera #Calculamos el tiempo de espera total
+    contador+=1 #Aumentamos el contador
+ 
+  print()
+  print('Desplazamiento total: {}'.format(desplazamientoTotal)) #Imprimir desplazamiento
+  print('Tiempo de espera promedio: {}'.format(tiempoEsperaTotal/len(peticiones))) #Imprimir tiempo de espera promedio
+  pass
 
 def sstf(peticiones, inicial):
- #peticiones -> lista de numeros enteros
- #inicial -> numero entero 
- #Mostrar tabla
- #Imprimir desplazamiento
- #Imprimir tiempo de espera promedio
- pass
+  #peticiones -> lista de numeros enteros
+  #inicial -> numero entero 
+  contador = 0 #Contador para saber en que posicion estamos del arreglo
+  punteroMenor = 0 #Puntero para indicar el numero menor al disco actual
+  punteroMayor = 0 #Puntero para indicar el numero mayor al actual
+  diferenciaMenor = 0 #Sabemos la diferencia del actual con el menor
+  diferenciaMayor = 0 #Sabemos la diferencia del actual con el mayor
+  tiempoEspera = 0 #Tiempo de espera de cada disco
+  tiempoEsperaTotal = 0 #Tiempo de espera total
+  desplazamiento = 0 #Desplazamiento de cada uno de los discos
+  desplazamientoTotal = 0 #Desplazamiento total
+  solicitado = 0 #Cilindro solicitado
+  ubicado = True #Para tener todos los datos ubicados
+  x = 0 #Solamente para ubicar nuestro inicial y los punteros
+  ordenados = sorted(peticiones) #Datos ordenados
+
+  while ubicado != False: #Ciclo para dar los valores de los punteros
+    if  x == len(peticiones):
+      punteroMenor = x-1
+      punteroMayor = x
+      ubicado = False
+    elif inicial < ordenados[x]:
+      punteroMenor = x-1
+      punteroMayor = x
+      ubicado = False
+    else:
+      x+=1
+
+  #Mostrar tabla
+  print()
+  print('|---------------------------------------------------------------------------|')
+  print('|                               Algoritmo SSTF                              |')
+  print('|---------------------------------------------------------------------------|')
+  print('| Cilindro Actual | Cilindro solicitado | Tiempo de espera | Desplazamiento |')
+  print('|---------------------------------------------------------------------------|')
+
+  while contador != len(peticiones): #Ciclo para realizar todos los procesos necesarios
+
+    if punteroMenor != -1: #Decision para obtener las diferencias de cada uno
+      diferenciaMenor = abs(inicial-ordenados[punteroMenor])
+    if punteroMayor != len(peticiones):
+      diferenciaMayor = abs(inicial-ordenados[punteroMayor])
+
+    if diferenciaMenor < diferenciaMayor and punteroMenor != -1: #Decision para obtener el ciclindro siguiente
+      solicitado = ordenados[punteroMenor]
+      punteroMenor -= 1
+    elif punteroMayor != len(peticiones):
+      solicitado = ordenados[punteroMayor]
+      punteroMayor += 1
+    else:
+      solicitado = ordenados[punteroMenor]
+      punteroMenor -= 1
+ 
+    tiempoEspera+=desplazamiento #Calculamos el tiempo de espera
+    desplazamiento=abs(inicial-solicitado) #Calculamos el desplazamiento realizado
+    print('|{:^17}|{:^21}|{:^18}|{:^16}|'.format(inicial, solicitado, tiempoEspera, desplazamiento)) #Mostramos los resultados
+    print('|---------------------------------------------------------------------------|')
+    inicial=solicitado #Asignamos el nuevo valor actual
+    desplazamientoTotal+=desplazamiento #Calculamos el desplazamiento total
+    tiempoEsperaTotal+=tiempoEspera #Calculamos el tiempo de espera total
+    contador+=1 #Aumentamos el contador
+    
+  print()
+  print('Desplazamiento total: {0}'.format(desplazamientoTotal)) #Imprimir desplazamiento
+  print('Tiempo de espera promedio: {0}'.format(tiempoEsperaTotal/len(peticiones))) #Imprimir tiempo de espera promedio
+  pass
 
 def scan(peticiones, inicial, bit):
  #peticiones -> lista de numeros enteros
