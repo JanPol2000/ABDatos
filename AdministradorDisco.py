@@ -11,11 +11,11 @@ def menu():
   else:
    print('Rango incorrecto')
 
- inicial = 0
- while inicial == 0:
+ inicial = -1
+ while inicial == -1:
   inicial = int(input('Ingrese cilindro inicial: '))
   if not (inicial >=0 and inicial <= 199):
-   inicial = 0 
+   inicial = -1
    print('Rango incorrecto')
 
  print('ALGORITMOS')
@@ -38,10 +38,10 @@ def menu():
   c_scan(peticiones, inicial, bit)
  elif opc == 5:
   bit = int(input('Bit de entrada: '))
-  look(peticiones, inicial, bit)
+  look_and_c_look(peticiones, inicial, bit,1)
  elif opc == 6:
   bit = int(input('Bit de entrada: '))
-  c_look(peticiones, inicial, bit)
+  look_and_c_look(peticiones, inicial, bit,0)
  
 def fcfs(peticiones, inicial):
   #peticiones -> lista de numeros enteros
@@ -161,23 +161,75 @@ def c_scan(peticiones, inicial, bit):
  #Imprimir tiempo de espera promedio
  pass
 
-def look(peticiones, inicial, bit):
- #peticiones -> lista de numeros enteros
- #inicial -> numero entero 
- #bit -> numero entero
- #Mostrar tabla
- #Imprimir desplazamiento
- #Imprimir tiempo de espera promedio
- pass
+def look_and_c_look(peticiones, inicial, bit, look):
+ peticiones.sort()#Ordenar peticiones
+ suma_tiempo = 0
+ suma_despl = 0
+ total = len(peticiones)
+ index = 0
+ 
+  
+ if bit:  #Si bit es 1, obtener el indice de inicial menor al mayor [inicial, mayor]
+  for i, v in enumerate(peticiones):
+   if inicial < v:
+    index = i
+    break
+ else: #En otro caso obtener el indice de incial mayor al menor [menor, inicial]
+  peticiones = peticiones[::-1]
+  for i, v in enumerate(peticiones):
+   if inicial > v:
+    index = i
+    break
+ print()
 
-def c_look(peticiones, inicial, bit):
- #peticiones -> lista de numeros enteros
- #inicial -> numero entero 
- #bit -> numero entero
- #Mostrar tabla
- #Imprimir desplazamiento
- #Imprimir tiempo de espera promedio
- pass
+ print('|---------------------------------------------------------------------------|')
+
+ if look: #Si el algoritmo es look
+  print('|                               Algoritmo LOOK                              |')
+ 
+ else:# Sino es c-look
+  print('|                              Algoritmo C-LOOK                             |')
+
+ print('|---------------------------------------------------------------------------|')
+  
+ print('| Cilindro Actual | Cilindro solicitado | Tiempo de espera | Desplazamiento |')
+  
+ print('|---------------------------------------------------------------------------|')
+
+ siguiente = peticiones[index]#peticion siguiente
+ tiempo = 0
+ desplazamiento = abs(inicial-siguiente)#Calcular el desplazamiento
+  
+ print('|{:^17}|{:^21}|{:^18}|{:^16}|'.format(inicial, siguiente, 0, desplazamiento))
+ print('|---------------------------------------------------------------------------|')
+ 
+ suma_despl = desplazamiento
+ for v in peticiones[index+1:]:#para todas las peticiones al indice mas 1, iniciar algoritmo
+  inicial = siguiente
+  siguiente = v
+  tiempo += desplazamiento
+  desplazamiento = abs(inicial-siguiente)
+  print('|{:^17}|{:^21}|{:^18}|{:^16}|'.format(inicial, siguiente, tiempo, desplazamiento))
+  print('|---------------------------------------------------------------------------|')
+  suma_tiempo += tiempo
+  suma_despl += desplazamiento
+
+ peticiones = peticiones[:index]#extraer las peticiones faltantes
+ if look:#si el algoritmo es look, invertir las peticiones
+  peticiones = peticiones[::-1]
+ for v in peticiones:#Para todas las peticiones, realizar algoritmo
+  inicial = siguiente
+  siguiente = v
+  tiempo += desplazamiento
+  desplazamiento = abs(inicial-siguiente)
+  print('|{:^17}|{:^21}|{:^18}|{:^16}|'.format(inicial, siguiente, tiempo, desplazamiento))
+  print('|---------------------------------------------------------------------------|')
+  suma_tiempo += tiempo
+  suma_despl += desplazamiento
+ 
+ print()
+ print('Desplazamiento total:', suma_despl) 
+ print('Tiempo de espera promedio: {:.2f}'.format(suma_tiempo/total))
 
 
 menu()
