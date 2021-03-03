@@ -143,23 +143,68 @@ def sstf(peticiones, inicial):
   print('Tiempo de espera promedio: {0}'.format(tiempoEsperaTotal/len(peticiones))) #Imprimir tiempo de espera promedio
   pass
 
-def scan(peticiones, inicial, bit):
- #peticiones -> lista de numeros enteros
- #inicial -> numero entero 
- #bit -> numero entero
- #Mostrar tabla
- #Imprimir desplazamiento
- #Imprimir tiempo de espera promedio
- pass
-
 def c_scan(peticiones, inicial, bit):
- #peticiones -> lista de numeros enteros
- #inicial -> numero entero 
- #bit -> numero entero
- #Mostrar tabla
- #Imprimir desplazamiento
- #Imprimir tiempo de espera promedio
- pass
+  
+  peticiones.append(inicial)
+
+  if bit == 0:
+    cilindro_solicitado = [199,0]
+    peticiones.sort()
+    for x in range(peticiones.index(inicial)):
+      cilindro_solicitado.append(peticiones[x])
+    for x in range(peticiones.index(inicial),-1,-1):
+      peticiones.pop(x)
+    cilindro_solicitado.reverse()
+    peticiones.reverse()
+    for x in range(len(peticiones)):
+      cilindro_solicitado.append(peticiones[x])
+
+  elif bit == 1:
+    cilindro_solicitado = [0,199]
+    peticiones.sort(reverse = True)
+    for x in range(peticiones.index(inicial)):
+      cilindro_solicitado.append(peticiones[x])
+    cilindro_solicitado.reverse()
+    for x in range(peticiones.index(inicial),-1,-1):
+      peticiones.pop(x)
+    peticiones.reverse()
+    for x in range(len(peticiones)):
+      cilindro_solicitado.append(peticiones[x])
+
+  else:
+    print("Fuera de rango")  
+
+  cilindro_actual, tiempo, desplazamiento = [inicial], [0], []
+
+  for x in range(len(cilindro_solicitado)):
+    desplazamiento.append(abs(cilindro_actual[x]-cilindro_solicitado[x]))
+    cilindro_actual.append(cilindro_solicitado[x])
+    tiempo.append(tiempo[x]+desplazamiento[x])
+
+  cilindro_actual.pop(len(cilindro_actual)-1)
+  tiempo.pop(len(tiempo)-1)
+  promedio = 0
+  desp = 0
+
+  print("\n|---------------------------------------------------------------------------|")
+  print("|{:^75}|".format("Algoritmo C-SCAN"))
+  print("|---------------------------------------------------------------------------|")
+  print("| Cilindro Actual | Cilindro Solicitado | Tiempo de Espera | Desplazamiento |")
+  print("|---------------------------------------------------------------------------|")
+  for x in range(len(cilindro_actual)):
+    print("|{:^17}".format(cilindro_actual[x]),end="")
+    print("|{:^21}".format(cilindro_solicitado[x]),end="")     
+    print("|{:^18}".format(tiempo[x]),end="")
+    print("|{:^16}|".format(desplazamiento[x]))
+    print("|---------------------------------------------------------------------------|")
+    promedio = promedio + tiempo[x]
+    desp = desp + desplazamiento[x]
+  
+  print("")
+  print("Desplazamiento total: "+str(desp))
+  print("Tiempo de espera promedio: ","{:.2f}".format(promedio/(len(tiempo)-2))+"\n")  
+
+pass
 
 def look_and_c_look(peticiones, inicial, bit, look):
  peticiones.sort()#Ordenar peticiones
